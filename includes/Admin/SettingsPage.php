@@ -14,6 +14,7 @@ use CinqWpCentral\Access\Gate;
 use CinqWpCentral\Central\Client;
 use CinqWpCentral\Central\Connection;
 use CinqWpCentral\Contracts\Service;
+use CinqWpCentral\Front\Widget;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -94,6 +95,9 @@ final class SettingsPage implements Service {
 		if ( is_wp_error( $answer ) ) {
 			$this->back( 'error', $answer->get_error_message() );
 		}
+
+		// The front end gets its widget right away, not at the next admin visit.
+		Widget::refresh( wp_get_current_user() );
 
 		/* translators: %s: client name in Central. */
 		$this->back( 'success', sprintf( __( 'Site relié à l’espace de %s.', 'cinq-wp-central' ), (string) ( $answer['client'] ?? '' ) ) );
@@ -222,8 +226,10 @@ final class SettingsPage implements Service {
 		}
 		echo '</table>';
 
+		$this->render_widget();
+
 		echo '<h2>' . esc_html__( 'Qui voit l’espace CINQ', 'cinq-wp-central' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Les comptes de ces rôles voient le menu CINQ, le bloc du tableau de bord et le bouton de retour sur le site. Chaque personne y apparaît sous son nom ; une adresse @agencecinq.com est reconnue comme l’équipe CINQ.', 'cinq-wp-central' ) . '</p>';
+		echo '<p>' . esc_html__( 'Les comptes de ces rôles voient le menu CINQ et le bloc du tableau de bord. Chaque personne y apparaît sous son nom ; une adresse @agencecinq.com est reconnue comme l’équipe CINQ.', 'cinq-wp-central' ) . '</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		wp_nonce_field( 'cinq_wp_central_roles' );
 		echo '<input type="hidden" name="action" value="cinq_wp_central_roles" />';
@@ -248,6 +254,46 @@ final class SettingsPage implements Service {
 		echo '<input type="hidden" name="action" value="cinq_wp_central_deconnecter" />';
 		submit_button( __( 'Déconnecter ce site', 'cinq-wp-central' ), 'delete' );
 		echo '</form>';
+	}
+
+	/**
+	 * The feedback button: its activation link, to open here or to send.
+	 *
+	 * @return void
+	 */
+	private function render_widget(): void {
+		echo '<h2>' . esc_html__( 'Bouton de retour sur le site', 'cinq-wp-central' ) . '</h2>';
+
+		$widget = Widget::refresh( wp_get_current_user() );
+		$link   = Widget::activation_url( $widget );
+
+		if ( null === $widget ) {
+			echo '<p>' . esc_html__( 'Central ne répond pas pour l’instant : le lien s’affichera au prochain passage.', 'cinq-wp-central' ) . '</p>';
+			return;
+		}
+
+		if ( '' === $link ) {
+			echo '<p>' . esc_html__( 'Aucun bouton de retour n’est actif pour ce site. L’équipe CINQ le règle depuis Central (fiche client › Sites, projet du widget).', 'cinq-wp-central' ) . '</p>';
+			return;
+		}
+
+		echo '<p>' . esc_html__( 'Le bouton « Signaler » apparaît sur le site dans les navigateurs qui ont ouvert ce lien une fois ; les visiteurs ne le voient jamais. Il peut être envoyé à toute personne qui doit signaler quelque chose, même sans accès à cette administration.', 'cinq-wp-central' ) . '</p>';
+		echo '<p>';
+		printf(
+			'<a class="button button-primary" href="%1$s" target="_blank" rel="noopener">%2$s</a> ',
+			esc_url( $link ),
+			esc_html__( 'Afficher le widget', 'cinq-wp-central' )
+		);
+		echo '</p>';
+		echo '<table class="form-table" role="presentation"><tr>';
+		echo '<th scope="row"><label for="cinq-wp-central-lien">' . esc_html__( 'Lien à envoyer', 'cinq-wp-central' ) . '</label></th>';
+		printf(
+			'<td><input type="text" id="cinq-wp-central-lien" class="large-text code" value="%1$s" readonly onclick="this.select()" /> <button type="button" class="button" onclick="%2$s">%3$s</button></td>',
+			esc_attr( $link ),
+			esc_attr( "var c=document.getElementById('cinq-wp-central-lien');c.select();navigator.clipboard&&navigator.clipboard.writeText(c.value);this.textContent='" . esc_js( __( 'Copié', 'cinq-wp-central' ) ) . "'" ),
+			esc_html__( 'Copier', 'cinq-wp-central' )
+		);
+		echo '</tr></table>';
 	}
 
 	/**

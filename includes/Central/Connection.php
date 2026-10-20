@@ -108,6 +108,7 @@ final class Connection {
 	 */
 	public static function forget(): void {
 		delete_option( self::OPTION );
+		delete_option( 'cinq_wp_central_widget' );
 		Cache::flush();
 	}
 

@@ -11,7 +11,7 @@ composants de WordPress, sans les couleurs de CINQ : l'espace prend l'allure de 
 |---|---|
 | Menu **CINQ** (sous Tableau de bord) | Accueil, Roadmap, Demandes, Factures, Ressources. Pastille = validations attendues. |
 | **Tableau de bord** | Bloc « CINQ — votre espace » : la situation, ce qui attend le client, ses demandes en cours. |
-| **Front du site** | Le widget de retour de Central, pour les personnes autorisées et connectées seulement (sans lien d'activation). |
+| **Front du site** | Le widget de retour de Central, chargé en dernier. Le bouton n'apparaît que dans les navigateurs qui ont ouvert le lien d'activation (`?cinq-feedback=…`) : **Réglages › CINQ Central › Afficher le widget**, ou le lien à envoyer à qui doit signaler (même sans accès à l'admin). |
 | **Barre d'admin** (front) | « Signaler à CINQ » : ouvre une nouvelle demande avec la page en cours. |
 | **Réglages › CINQ Central** | Relier le site, choisir les rôles qui voient l'espace, déconnecter. |
 
@@ -54,7 +54,11 @@ navigateur ──(cookie + nonce REST)──▶ /wp-json/cinq-wp-central/v1/*   
 - `includes/Central/Client.php` : appels à Central ; un secret révoqué remonte en
   « site déconnecté », un refus de Central s'affiche tel qu'il est écrit.
 - `includes/Central/Space.php` : ce qui s'affiche sur toutes les pages (pastille, bloc du
-  tableau de bord, widget) est mis en cache 5 minutes par personne, échecs compris.
+  tableau de bord) est mis en cache 5 minutes par personne, échecs compris ; le widget,
+  une heure pour le site.
+- `includes/Front/Widget.php` : le front n'appelle jamais Central. La partie publique du
+  widget (script, jeton — jamais la clé) est gardée en option, rafraîchie quand une
+  personne autorisée passe dans l'admin.
 - `src/` : l'app React (`@wordpress/components`), construite dans `build/`.
 
 ## Configuration

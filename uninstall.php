@@ -30,9 +30,10 @@ if ( is_array( $cinq_wp_central_connexion ) && ! empty( $cinq_wp_central_connexi
 
 delete_option( 'cinq_wp_central_connexion' );
 delete_option( 'cinq_wp_central_roles' );
+delete_option( 'cinq_wp_central_widget' );
 delete_option( 'cinq_wp_central_cache_gen' );
 delete_transient( 'cinq_wp_central_latest_release' );
 
 global $wpdb;
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- the plugin's own transients, whose names carry a generation number.
-$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\\_transient\\_cinq\\_central\\_%' OR option_name LIKE '\\_transient\\_timeout\\_cinq\\_central\\_%'" );
+$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '\\_transient\\_cinq\\_wp\\_central\\_%' OR option_name LIKE '\\_transient\\_timeout\\_cinq\\_wp\\_central\\_%'" );
