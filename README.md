@@ -94,7 +94,8 @@ pousser un tag `vX.Y.Z`. Le workflow lance les tests puis `deploy.sh`, qui insta
 construit l'app d'administration et retire tout ce qui ne sert pas en production (sources,
 tests, dépendances de dev, configs). Ce qui reste est zippé dans `cinq-wp-central.zip` (dossier
 `cinq-wp-central/`) et attaché à la release avec `update.json` ; les sites l'installent d'eux-mêmes
-dans les 12 heures.
+dans les 12 heures. Aucune mise à jour n'est proposée quand le dossier du plugin est une copie de
+travail Git, puisque la mise à jour remplace tout le dossier.
 
 ```bash
 ./deploy.sh /tmp/deploy.log   # à lancer sur une copie : le script supprime des fichiers
