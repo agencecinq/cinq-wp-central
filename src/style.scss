@@ -273,6 +273,18 @@
 		}
 	}
 
+	// The requests board: three states, sharing the width instead of scrolling.
+	.cinq-roadmap--etats .cinq-roadmap__colonne {
+		flex: 1 1 260px;
+		min-width: 220px;
+	}
+
+	.cinq-bascule {
+		display: flex;
+		gap: 4px;
+		margin: 12px 0 0;
+	}
+
 	.cinq-description {
 		max-width: 60em;
 		white-space: pre-wrap;

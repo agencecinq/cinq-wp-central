@@ -26,9 +26,34 @@ const ONGLETS = [
 	{ name: 'reglee', title: 'Réglées' },
 ];
 
-/** All requests, in the three columns of the web space: received, in progress, settled. */
+// The chosen view is a convenience of this browser: the board by default.
+const CLE_VUE = 'cinq-wp-central:demandes-vue';
+
+function vueRetenue() {
+	try {
+		return window.localStorage.getItem( CLE_VUE ) === 'liste'
+			? 'liste'
+			: 'tableau';
+	} catch {
+		return 'tableau';
+	}
+}
+
+/**
+ * All requests, in the three columns of the web space: received, in
+ * progress, settled. A board by default, a list on demand.
+ */
 export function Demandes() {
 	const lecture = useLecture( '/demandes' );
+	const [ vue, setVue ] = useState( vueRetenue );
+
+	const choisir = ( v ) => {
+		setVue( v );
+		try {
+			window.localStorage.setItem( CLE_VUE, v );
+		} catch {}
+	};
+
 	return (
 		<Ecran lecture={ lecture }>
 			{ ( { demandes } ) => (
@@ -44,75 +69,141 @@ export function Demandes() {
 							</a>
 						}
 					/>
-					<TabPanel
-						tabs={ ONGLETS.map( ( o ) => ( {
-							...o,
-							title: `${ o.title } (${
-								demandes.filter( ( d ) => d.etat === o.name )
-									.length
-							})`,
-						} ) ) }
+					<div
+						className="cinq-bascule"
+						role="group"
+						aria-label="Affichage"
 					>
-						{ ( onglet ) => {
-							const liste = demandes.filter(
-								( d ) => d.etat === onglet.name
-							);
-							return (
-								<table className="wp-list-table widefat fixed striped cinq-onglet">
-									<thead>
-										<tr>
-											<th>Demande</th>
-											<th>Projet</th>
-											<th>Gêne</th>
-											<th>Ouverte le</th>
-										</tr>
-									</thead>
-									<tbody>
-										{ liste.length === 0 && (
-											<tr>
-												<td colSpan="4">
-													Aucune demande.
-												</td>
-											</tr>
-										) }
-										{ liste.map( ( d ) => (
-											<tr key={ d.id }>
-												<td>
-													<strong>
-														<a
-															className="row-title"
-															href={ `#/demandes/${ d.id }` }
-														>
-															{ d.titre }
-														</a>
-													</strong>
-												</td>
-												<td>{ d.projetTitre }</td>
-												<td>
-													{ d.impact ? (
-														<Pastille
-															valeur={ d.impact }
-															libelle={
-																IMPACT[
-																	d.impact
-																]
-															}
-														/>
-													) : (
-														'—'
-													) }
-												</td>
-												<td>{ date( d.ouverteLe ) }</td>
-											</tr>
-										) ) }
-									</tbody>
-								</table>
-							);
-						} }
-					</TabPanel>
+						<Button
+							size="compact"
+							icon="columns"
+							isPressed={ vue === 'tableau' }
+							onClick={ () => choisir( 'tableau' ) }
+						>
+							Tableau
+						</Button>
+						<Button
+							size="compact"
+							icon="list-view"
+							isPressed={ vue === 'liste' }
+							onClick={ () => choisir( 'liste' ) }
+						>
+							Liste
+						</Button>
+					</div>
+					{ vue === 'tableau' ? (
+						<Tableau demandes={ demandes } />
+					) : (
+						<Liste demandes={ demandes } />
+					) }
 				</>
 			) }
 		</Ecran>
+	);
+}
+
+function Tableau( { demandes } ) {
+	return (
+		<div className="cinq-roadmap cinq-roadmap--etats">
+			{ ONGLETS.map( ( o ) => {
+				const liste = demandes.filter( ( d ) => d.etat === o.name );
+				return (
+					<section key={ o.name } className="cinq-roadmap__colonne">
+						<h2>
+							{ o.title }{ ' ' }
+							<span className="count">({ liste.length })</span>
+						</h2>
+						{ liste.length === 0 && (
+							<p className="description">Aucune demande.</p>
+						) }
+						{ liste.map( ( d ) => (
+							<a
+								key={ d.id }
+								className="cinq-roadmap__carte"
+								href={ `#/demandes/${ d.id }` }
+							>
+								<strong>{ d.titre }</strong>
+								<span className="description">
+									{ d.projetTitre } · { date( d.ouverteLe ) }
+								</span>
+								{ d.impact && (
+									<span>
+										<Pastille
+											valeur={ d.impact }
+											libelle={ IMPACT[ d.impact ] }
+										/>
+									</span>
+								) }
+							</a>
+						) ) }
+					</section>
+				);
+			} ) }
+		</div>
+	);
+}
+
+function Liste( { demandes } ) {
+	return (
+		<TabPanel
+			tabs={ ONGLETS.map( ( o ) => ( {
+				...o,
+				title: `${ o.title } (${
+					demandes.filter( ( d ) => d.etat === o.name ).length
+				})`,
+			} ) ) }
+		>
+			{ ( onglet ) => {
+				const liste = demandes.filter(
+					( d ) => d.etat === onglet.name
+				);
+				return (
+					<table className="wp-list-table widefat fixed striped cinq-onglet">
+						<thead>
+							<tr>
+								<th>Demande</th>
+								<th>Projet</th>
+								<th>Gêne</th>
+								<th>Ouverte le</th>
+							</tr>
+						</thead>
+						<tbody>
+							{ liste.length === 0 && (
+								<tr>
+									<td colSpan="4">Aucune demande.</td>
+								</tr>
+							) }
+							{ liste.map( ( d ) => (
+								<tr key={ d.id }>
+									<td>
+										<strong>
+											<a
+												className="row-title"
+												href={ `#/demandes/${ d.id }` }
+											>
+												{ d.titre }
+											</a>
+										</strong>
+									</td>
+									<td>{ d.projetTitre }</td>
+									<td>
+										{ d.impact ? (
+											<Pastille
+												valeur={ d.impact }
+												libelle={ IMPACT[ d.impact ] }
+											/>
+										) : (
+											'—'
+										) }
+									</td>
+									<td>{ date( d.ouverteLe ) }</td>
+								</tr>
+							) ) }
+						</tbody>
+					</table>
+				);
+			} }
+		</TabPanel>
 	);
 }
 
