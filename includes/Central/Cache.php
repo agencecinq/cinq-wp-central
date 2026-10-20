@@ -52,6 +52,16 @@ final class Cache {
 	}
 
 	/**
+	 * Drops one cached value.
+	 *
+	 * @param string $key Key.
+	 * @return void
+	 */
+	public static function forget( string $key ): void {
+		delete_transient( self::key( $key ) );
+	}
+
+	/**
 	 * Drops every cached value.
 	 *
 	 * @return void

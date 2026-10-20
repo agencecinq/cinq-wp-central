@@ -50,10 +50,15 @@ final class Space {
 	 * The same for every person, and read on front-end pages: cached an hour
 	 * for the whole site, so a page waits for Central once an hour at most.
 	 *
-	 * @param WP_User $user User.
+	 * @param WP_User $user  User.
+	 * @param bool    $fresh Ask Central again, whatever the cache holds.
 	 * @return array<string, mixed>|null
 	 */
-	public static function widget( WP_User $user ): ?array {
+	public static function widget( WP_User $user, bool $fresh = false ): ?array {
+		if ( $fresh ) {
+			Cache::forget( 'widget:site' );
+		}
+
 		return self::cached( 'widget', $user, HOUR_IN_SECONDS, 'widget:site' );
 	}
 

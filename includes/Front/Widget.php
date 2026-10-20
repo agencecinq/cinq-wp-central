@@ -63,11 +63,12 @@ final class Widget implements Service {
 	 * Reads the widget from Central for a person and keeps its public part
 	 * for the front end. Cached an hour for the site (`Space::widget`).
 	 *
-	 * @param WP_User $user Allowed person.
+	 * @param WP_User $user  Allowed person.
+	 * @param bool    $fresh Ask Central again, whatever the cache holds.
 	 * @return array<string, mixed>|null The full answer, key included, or null.
 	 */
-	public static function refresh( WP_User $user ): ?array {
-		$widget = Space::widget( $user );
+	public static function refresh( WP_User $user, bool $fresh = false ): ?array {
+		$widget = Space::widget( $user, $fresh );
 
 		// Central did not answer: keep what the front end already has.
 		if ( null === $widget ) {

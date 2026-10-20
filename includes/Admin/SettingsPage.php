@@ -97,7 +97,7 @@ final class SettingsPage implements Service {
 		}
 
 		// The front end gets its widget right away, not at the next admin visit.
-		Widget::refresh( wp_get_current_user() );
+		Widget::refresh( wp_get_current_user(), true );
 
 		/* translators: %s: client name in Central. */
 		$this->back( 'success', sprintf( __( 'Site relié à l’espace de %s.', 'cinq-wp-central' ), (string) ( $answer['client'] ?? '' ) ) );
@@ -264,7 +264,9 @@ final class SettingsPage implements Service {
 	private function render_widget(): void {
 		echo '<h2>' . esc_html__( 'Bouton de retour sur le site', 'cinq-wp-central' ) . '</h2>';
 
-		$widget = Widget::refresh( wp_get_current_user() );
+		// Read fresh here: this page is where a change made in Central (project
+		// linked, widget turned on) should show at once.
+		$widget = Widget::refresh( wp_get_current_user(), true );
 		$link   = Widget::activation_url( $widget );
 
 		if ( null === $widget ) {
