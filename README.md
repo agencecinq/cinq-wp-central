@@ -90,6 +90,15 @@ npx @wp-playground/cli server --port 9400 --workers=1 --login \
 ## Publier une version
 
 Monter la version dans l'en-tête **et** la constante `VERSION` de `cinq-central.php`, puis
-pousser un tag `vX.Y.Z`. Le workflow construit l'app, le zip et `update.json`, et les attache
-à la release ; les sites l'installent d'eux-mêmes dans les 12 heures. Le dépôt doit être
-public pour que les sites puissent télécharger le zip (il ne contient aucun secret).
+pousser un tag `vX.Y.Z`. Le workflow lance les tests puis `deploy.sh`, qui installe et
+construit l'app d'administration et retire tout ce qui ne sert pas en production (sources,
+tests, dépendances de dev, configs). Ce qui reste est zippé dans `cinq-central.zip` (dossier
+`cinq-central/`) et attaché à la release avec `update.json` ; les sites l'installent d'eux-mêmes
+dans les 12 heures.
+
+```bash
+./deploy.sh /tmp/deploy.log   # à lancer sur une copie : le script supprime des fichiers
+```
+
+Le dépôt doit être public pour que les sites puissent télécharger le zip (il ne contient
+aucun secret).
