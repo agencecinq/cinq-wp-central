@@ -37,7 +37,9 @@ final class Widget implements Service {
 	 * @return void
 	 */
 	public function run(): void {
-		add_action( 'wp_footer', array( $this, 'render' ), 100 );
+		// Last of the footer, after wp_print_footer_scripts (20) and whatever
+		// other plugins print late: the widget runs once the page is done.
+		add_action( 'wp_footer', array( $this, 'render' ), PHP_INT_MAX );
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar' ), 90 );
 	}
 
@@ -48,6 +50,12 @@ final class Widget implements Service {
 	 */
 	public function render(): void {
 		if ( is_admin() || ! is_user_logged_in() || ! Gate::can() || ! Connection::is_connected() ) {
+			return;
+		}
+
+		// Not inside the Customizer preview: pointing at an element there
+		// would report the editor, not the site.
+		if ( is_customize_preview() ) {
 			return;
 		}
 

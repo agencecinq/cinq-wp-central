@@ -47,11 +47,14 @@ final class Space {
 	/**
 	 * The feedback widget of the project linked to this site.
 	 *
+	 * The same for every person, and read on front-end pages: cached an hour
+	 * for the whole site, so a page waits for Central once an hour at most.
+	 *
 	 * @param WP_User $user User.
 	 * @return array<string, mixed>|null
 	 */
 	public static function widget( WP_User $user ): ?array {
-		return self::cached( 'widget', $user, 600 );
+		return self::cached( 'widget', $user, HOUR_IN_SECONDS, 'widget:site' );
 	}
 
 	/**
@@ -72,14 +75,15 @@ final class Space {
 	 * @param string  $route Route name under /api/connect/v1.
 	 * @param WP_User $user  User.
 	 * @param int     $ttl   Lifetime in seconds.
+	 * @param ?string $key   Cache key, per person by default.
 	 * @return array<string, mixed>|null
 	 */
-	private static function cached( string $route, WP_User $user, int $ttl ): ?array {
+	private static function cached( string $route, WP_User $user, int $ttl, ?string $key = null ): ?array {
 		if ( ! Connection::is_connected() ) {
 			return null;
 		}
 
-		$key    = $route . ':' . $user->ID;
+		$key  ??= $route . ':' . $user->ID;
 		$cached = Cache::get( $key );
 
 		if ( is_array( $cached ) ) {
