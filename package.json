@@ -1,6 +1,6 @@
 {
 	"name": "cinq-wp-central",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"private": true,
 	"description": "Interface d'administration du plugin CINQ Central.",
 	"license": "MIT",
