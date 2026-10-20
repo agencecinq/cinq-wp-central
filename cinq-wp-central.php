@@ -3,7 +3,7 @@
  * Plugin Name:       CINQ Central
  * Plugin URI:        https://github.com/agencecinq/cinq-wp-central
  * Description:       Votre espace client CINQ dans l'administration WordPress : projets, validations, roadmap, demandes et factures, au fil de Central.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.6
  * Requires PHP:      8.1
  * Author:            CINQ
@@ -23,7 +23,7 @@ namespace CinqWpCentral;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION     = '0.1.0';
+const VERSION     = '0.1.1';
 const PLUGIN_FILE = __FILE__;
 
 /**
