@@ -1,0 +1,11 @@
+{
+	"core": null,
+	"phpVersion": "8.2",
+	"plugins": [ "." ],
+	"port": 8888,
+	"testsPort": 8889,
+	"config": {
+		"CINQ_CENTRAL_URL": "http://host.docker.internal:3100",
+		"WP_DEBUG": true
+	}
+}

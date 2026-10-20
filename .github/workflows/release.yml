@@ -1,0 +1,69 @@
+name: Release
+
+# Push a tag such as v0.2.0: the plugin zip (admin app built in) and its
+# update.json manifest are attached to a GitHub release. Sites running the
+# plugin see the update within twelve hours and install it on their own.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Check the version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          header="$(sed -n 's/^ \* Version: *//p' cinq-central.php)"
+          constant="$(sed -n "s/^const VERSION *= *'\(.*\)';/\1/p" cinq-central.php)"
+          if [ "$tag" != "$header" ] || [ "$tag" != "$constant" ]; then
+            echo "Tag $tag, header $header, constant $constant: bump both in cinq-central.php." >&2
+            exit 1
+          fi
+
+      - run: composer install --no-interaction --no-progress && composer test
+
+      - run: npm ci && npm run build
+
+      # `build/` is not versioned: it is copied next to the archived sources.
+      - name: Build the zip
+        run: |
+          mkdir -p dist
+          git archive --format=tar --prefix=cinq-central/ HEAD | tar -x -C dist
+          cp -R build dist/cinq-central/build
+          (cd dist && zip -qr ../cinq-central.zip cinq-central)
+          unzip -l cinq-central.zip | tail -n 5
+
+      - name: Write the update manifest
+        run: |
+          jq -n \
+            --arg version "${GITHUB_REF_NAME#v}" \
+            --arg url "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${GITHUB_REF_NAME}" \
+            --arg package "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cinq-central.zip" \
+            --arg requires "$(sed -n 's/^ \* Requires at least: *//p' cinq-central.php)" \
+            --arg requires_php "$(sed -n 's/^ \* Requires PHP: *//p' cinq-central.php)" \
+            '{version: $version, url: $url, package: $package, requires: $requires, requires_php: $requires_php}' > update.json
+          cat update.json
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            cinq-central.zip
+            update.json
+          generate_release_notes: true

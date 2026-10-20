@@ -1,0 +1,15 @@
+# Left out of the plugin zip and of `git archive`.
+/.github          export-ignore
+/tests            export-ignore
+/src              export-ignore
+/.editorconfig    export-ignore
+/.gitattributes   export-ignore
+/.gitignore       export-ignore
+/composer.json    export-ignore
+/composer.lock    export-ignore
+/package.json     export-ignore
+/package-lock.json export-ignore
+/phpcs.xml        export-ignore
+/.wp-env.json     export-ignore
+/.eslintrc.json   export-ignore
+/.stylelintrc.json export-ignore
