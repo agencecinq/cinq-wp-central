@@ -2,7 +2,7 @@
 // Colours come from the admin colour scheme (`--wp-admin-theme-color`) and
 // the notice palette, so the space follows each site's admin.
 
-.cinq-central {
+.cinq-wp-central {
 	--cinq-bord: #dcdcde;
 	--cinq-fond: #fff;
 	--cinq-doux: #f6f7f7;
@@ -317,7 +317,7 @@
 	}
 }
 
-// The modal renders outside `.cinq-central`, so these stay at the root.
+// The modal renders outside `.cinq-wp-central`, so these stay at the root.
 .cinq-fil {
 	margin: 0 0 16px;
 

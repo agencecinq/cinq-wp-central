@@ -2,17 +2,17 @@
 /**
  * HTTP client for Central's `/api/connect/v1`.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Central
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Central
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Central;
+namespace CinqWpCentral\Central;
 
 use WP_Error;
 use WP_User;
-use const CinqCentral\VERSION;
+use const CinqWpCentral\VERSION;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -39,7 +39,7 @@ final class Client {
 		$connection = Connection::get();
 
 		if ( null === $connection && '/appairer' !== $path ) {
-			return new WP_Error( 'cinq_central_deconnecte', __( "Ce site n'est pas encore relié à Central.", 'cinq-central' ), array( 'status' => 409 ) );
+			return new WP_Error( 'cinq_wp_central_deconnecte', __( "Ce site n'est pas encore relié à Central.", 'cinq-wp-central' ), array( 'status' => 409 ) );
 		}
 
 		$headers = self::headers( $connection, $user );
@@ -71,14 +71,14 @@ final class Client {
 		$connection = Connection::get();
 
 		if ( null === $connection ) {
-			return new WP_Error( 'cinq_central_deconnecte', __( "Ce site n'est pas encore relié à Central.", 'cinq-central' ), array( 'status' => 409 ) );
+			return new WP_Error( 'cinq_wp_central_deconnecte', __( "Ce site n'est pas encore relié à Central.", 'cinq-wp-central' ), array( 'status' => 409 ) );
 		}
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- a local upload, not a remote URL.
 		$contents = file_get_contents( $file_path );
 
 		if ( false === $contents ) {
-			return new WP_Error( 'cinq_central_fichier', __( "Le fichier n'a pas pu être lu.", 'cinq-central' ), array( 'status' => 400 ) );
+			return new WP_Error( 'cinq_wp_central_fichier', __( "Le fichier n'a pas pu être lu.", 'cinq-wp-central' ), array( 'status' => 400 ) );
 		}
 
 		$boundary = 'cinq' . wp_generate_password( 24, false );
@@ -207,8 +207,8 @@ final class Client {
 
 		if ( is_wp_error( $response ) ) {
 			return new WP_Error(
-				'cinq_central_injoignable',
-				__( 'Central ne répond pas. Réessayez dans un instant.', 'cinq-central' ),
+				'cinq_wp_central_injoignable',
+				__( 'Central ne répond pas. Réessayez dans un instant.', 'cinq-wp-central' ),
 				array(
 					'status' => 502,
 					'detail' => $response->get_error_message(),
@@ -226,12 +226,12 @@ final class Client {
 
 		$message = isset( $data['erreur'] ) && is_string( $data['erreur'] )
 			? $data['erreur']
-			: __( "Central n'a pas pu traiter la demande.", 'cinq-central' );
+			: __( "Central n'a pas pu traiter la demande.", 'cinq-wp-central' );
 
 		if ( 401 === $status ) {
-			return new WP_Error( 'cinq_central_deconnecte', $message, array( 'status' => 409 ) );
+			return new WP_Error( 'cinq_wp_central_deconnecte', $message, array( 'status' => 409 ) );
 		}
 
-		return new WP_Error( 'cinq_central_refus', $message, array( 'status' => $status > 0 ? $status : 502 ) );
+		return new WP_Error( 'cinq_wp_central_refus', $message, array( 'status' => $status > 0 ? $status : 502 ) );
 	}
 }

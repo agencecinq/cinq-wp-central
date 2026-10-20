@@ -2,13 +2,13 @@
 /**
  * Who opens the client space from this site.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Access
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Access
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Access;
+namespace CinqWpCentral\Access;
 
 use WP_User;
 
@@ -31,7 +31,7 @@ final class Gate {
 	/**
 	 * Option holding the allowed roles.
 	 */
-	public const OPTION = 'cinq_central_roles';
+	public const OPTION = 'cinq_wp_central_roles';
 
 	/**
 	 * Roles allowed until the settings say otherwise.
@@ -71,7 +71,7 @@ final class Gate {
 		 * @param bool    $allowed Decision from the allowed roles.
 		 * @param WP_User $user    User.
 		 */
-		return (bool) apply_filters( 'cinq_central_user_can', $allowed, $user );
+		return (bool) apply_filters( 'cinq_wp_central_user_can', $allowed, $user );
 	}
 
 	/**

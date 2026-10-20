@@ -40,8 +40,8 @@ export function Erreur( { erreur } ) {
 	if ( ! erreur ) {
 		return null;
 	}
-	const deconnecte = erreur.code === 'cinq_central_deconnecte';
-	const reglages = window.cinqCentral?.reglages;
+	const deconnecte = erreur.code === 'cinq_wp_central_deconnecte';
+	const reglages = window.cinqWpCentral?.reglages;
 	return (
 		<Notice status="error" isDismissible={ false }>
 			{ erreur.message ?? 'Une erreur est survenue.' }

@@ -1,5 +1,5 @@
 {
-	"name": "agencecinq/wp-central",
+	"name": "agencecinq/cinq-wp-central",
 	"description": "L'espace client CINQ dans l'administration WordPress, au fil de Central.",
 	"type": "wordpress-plugin",
 	"license": "MIT",
@@ -18,7 +18,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"CinqCentral\\": "./includes"
+			"CinqWpCentral\\": "./includes"
 		}
 	},
 	"config": {
@@ -31,5 +31,5 @@
 		"lint": "phpcs",
 		"lint:fix": "phpcbf"
 	},
-	"homepage": "https://github.com/agencecinq/wp-central"
+	"homepage": "https://github.com/agencecinq/cinq-wp-central"
 }

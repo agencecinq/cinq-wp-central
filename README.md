@@ -27,7 +27,7 @@ Règle convenue : **qui a accès à l'admin du site a accès à l'espace de ce c
   elle ne peut pas valider une étape à la place du client.
 - Une adresse déjà rattachée à un autre client dans Central est refusée, jamais déplacée.
 
-Le filtre `cinq_central_user_can( bool $allowed, WP_User $user )` a le dernier mot.
+Le filtre `cinq_wp_central_user_can( bool $allowed, WP_User $user )` a le dernier mot.
 
 ## Installer chez un client
 
@@ -42,7 +42,7 @@ Central ne garde que son empreinte. Supprimer le plugin prévient Central et eff
 ## Fonctionnement
 
 ```
-navigateur ──(cookie + nonce REST)──▶ /wp-json/cinq-central/v1/*   (PHP du plugin)
+navigateur ──(cookie + nonce REST)──▶ /wp-json/cinq-wp-central/v1/*   (PHP du plugin)
                                          │  Bearer <secret du site>
                                          │  X-Cinq-Acteur: <personne connectée>
                                          ▼
@@ -61,9 +61,9 @@ navigateur ──(cookie + nonce REST)──▶ /wp-json/cinq-central/v1/*   (PH
 
 | Réglage | Où |
 |---|---|
-| Adresse de Central | constante `CINQ_CENTRAL_URL` dans `wp-config.php`, ou filtre `cinq_central_url` (défaut `https://app.cinqteam.com`) |
-| Widget sur le front | filtre `cinq_central_front_widget` (`false` pour le retirer) |
-| Mises à jour automatiques | filtre `cinq_central_auto_update` (activées par défaut) |
+| Adresse de Central | constante `CINQ_CENTRAL_URL` dans `wp-config.php`, ou filtre `cinq_wp_central_url` (défaut `https://app.cinqteam.com`) |
+| Widget sur le front | filtre `cinq_wp_central_front_widget` (`false` pour le retirer) |
+| Mises à jour automatiques | filtre `cinq_wp_central_auto_update` (activées par défaut) |
 
 ## Développer
 
@@ -81,7 +81,7 @@ DATABASE_URL=postgresql://…/test pnpm dev -p 3100
 
 # WordPress jetable, plugin monté, un seul worker (sinon la base n'est pas partagée)
 npx @wp-playground/cli server --port 9400 --workers=1 --login \
-  --mount=$(pwd):/wordpress/wp-content/plugins/cinq-central \
+  --mount=$(pwd):/wordpress/wp-content/plugins/cinq-wp-central \
   --define CINQ_CENTRAL_URL http://127.0.0.1:3100
 ```
 
@@ -89,11 +89,11 @@ npx @wp-playground/cli server --port 9400 --workers=1 --login \
 
 ## Publier une version
 
-Monter la version dans l'en-tête **et** la constante `VERSION` de `cinq-central.php`, puis
+Monter la version dans l'en-tête **et** la constante `VERSION` de `cinq-wp-central.php`, puis
 pousser un tag `vX.Y.Z`. Le workflow lance les tests puis `deploy.sh`, qui installe et
 construit l'app d'administration et retire tout ce qui ne sert pas en production (sources,
-tests, dépendances de dev, configs). Ce qui reste est zippé dans `cinq-central.zip` (dossier
-`cinq-central/`) et attaché à la release avec `update.json` ; les sites l'installent d'eux-mêmes
+tests, dépendances de dev, configs). Ce qui reste est zippé dans `cinq-wp-central.zip` (dossier
+`cinq-wp-central/`) et attaché à la release avec `update.json` ; les sites l'installent d'eux-mêmes
 dans les 12 heures.
 
 ```bash

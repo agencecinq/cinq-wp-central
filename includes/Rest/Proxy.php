@@ -2,18 +2,18 @@
 /**
  * REST routes of the admin app, relayed to Central.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Rest
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Rest
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Rest;
+namespace CinqWpCentral\Rest;
 
-use CinqCentral\Access\Gate;
-use CinqCentral\Central\Cache;
-use CinqCentral\Central\Client;
-use CinqCentral\Contracts\Service;
+use CinqWpCentral\Access\Gate;
+use CinqWpCentral\Central\Cache;
+use CinqWpCentral\Central\Client;
+use CinqWpCentral\Contracts\Service;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -21,7 +21,7 @@ use WP_REST_Response;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * `/wp-json/cinq-central/v1/*`: one WordPress route per Central route.
+ * `/wp-json/cinq-wp-central/v1/*`: one WordPress route per Central route.
  *
  * A list, not a pass-through: a generic proxy would forward whatever path the
  * browser asked for, with this site's secret attached. Each route here names
@@ -36,7 +36,7 @@ final class Proxy implements Service {
 	/**
 	 * REST namespace.
 	 */
-	public const NAMESPACE = 'cinq-central/v1';
+	public const NAMESPACE = 'cinq-wp-central/v1';
 
 	/**
 	 * UUID pattern for route parameters.
@@ -122,7 +122,7 @@ final class Proxy implements Service {
 			return true;
 		}
 
-		return new WP_Error( 'cinq_central_interdit', __( "Votre compte n'a pas accès à l'espace CINQ.", 'cinq-central' ), array( 'status' => rest_authorization_required_code() ) );
+		return new WP_Error( 'cinq_wp_central_interdit', __( "Votre compte n'a pas accès à l'espace CINQ.", 'cinq-wp-central' ), array( 'status' => rest_authorization_required_code() ) );
 	}
 
 	/**
@@ -162,7 +162,7 @@ final class Proxy implements Service {
 		$file  = $files['file'] ?? null;
 
 		if ( ! is_array( $file ) || ! empty( $file['error'] ) || empty( $file['tmp_name'] ) || ! is_uploaded_file( (string) $file['tmp_name'] ) ) {
-			return new WP_Error( 'cinq_central_fichier', __( "Aucun fichier n'a été reçu.", 'cinq-central' ), array( 'status' => 400 ) );
+			return new WP_Error( 'cinq_wp_central_fichier', __( "Aucun fichier n'a été reçu.", 'cinq-wp-central' ), array( 'status' => 400 ) );
 		}
 
 		$answer = Client::upload(

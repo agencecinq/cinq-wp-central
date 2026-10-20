@@ -5,14 +5,14 @@
  * No WordPress, no database: the plugin's logic runs against an in-memory
  * world (options, transients, users, HTTP) that each suite resets.
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );
 
 define( 'ABSPATH', __DIR__ . '/' );
 define( 'HOUR_IN_SECONDS', 3600 );
-define( 'CINQ_CENTRAL_PATH', dirname( __DIR__ ) . '/' );
+define( 'CINQ_WP_CENTRAL_PATH', dirname( __DIR__ ) . '/' );
 
 require_once __DIR__ . '/stubs.php';
 
@@ -48,7 +48,7 @@ function section( string $title ): void {
 	echo "\n{$title}\n";
 }
 
-require_once CINQ_CENTRAL_PATH . 'includes/autoload.php';
+require_once CINQ_WP_CENTRAL_PATH . 'includes/autoload.php';
 
 // The constants the main plugin file defines.
-eval( 'namespace CinqCentral; const VERSION = "0.0.0-test"; const PLUGIN_FILE = "' . addslashes( CINQ_CENTRAL_PATH . 'cinq-central.php' ) . '";' ); // phpcs:ignore Squiz.PHP.Eval.Discouraged -- test bootstrap only.
+eval( 'namespace CinqWpCentral; const VERSION = "0.0.0-test"; const PLUGIN_FILE = "' . addslashes( CINQ_WP_CENTRAL_PATH . 'cinq-wp-central.php' ) . '";' ); // phpcs:ignore Squiz.PHP.Eval.Discouraged -- test bootstrap only.

@@ -2,12 +2,12 @@
 /**
  * The REST routes relayed to Central.
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );
 
-use CinqCentral\Rest\Proxy;
+use CinqWpCentral\Rest\Proxy;
 
 ( new Proxy() )->register();
 

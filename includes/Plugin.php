@@ -2,19 +2,19 @@
 /**
  * Plugin bootstrap.
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral;
+namespace CinqWpCentral;
 
-use CinqCentral\Admin\AppPage;
-use CinqCentral\Admin\DashboardWidget;
-use CinqCentral\Admin\SettingsPage;
-use CinqCentral\Front\Widget;
-use CinqCentral\Rest\Proxy;
-use CinqCentral\Update\GitHubUpdater;
+use CinqWpCentral\Admin\AppPage;
+use CinqWpCentral\Admin\DashboardWidget;
+use CinqWpCentral\Admin\SettingsPage;
+use CinqWpCentral\Front\Widget;
+use CinqWpCentral\Rest\Proxy;
+use CinqWpCentral\Update\GitHubUpdater;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -66,7 +66,7 @@ final class Plugin {
 	 * @return void
 	 */
 	public function boot(): void {
-		load_plugin_textdomain( 'cinq-central', false, dirname( plugin_basename( PLUGIN_FILE ) ) . '/languages' );
+		load_plugin_textdomain( 'cinq-wp-central', false, dirname( plugin_basename( PLUGIN_FILE ) ) . '/languages' );
 
 		$services = array(
 			new SettingsPage(),

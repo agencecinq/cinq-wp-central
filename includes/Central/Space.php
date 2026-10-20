@@ -2,13 +2,13 @@
 /**
  * Cached reads shown outside the space itself.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Central
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Central
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Central;
+namespace CinqWpCentral\Central;
 
 use WP_User;
 

@@ -31,6 +31,6 @@ export function aller( chemin ) {
  * Link to another screen of the space (another submenu).
  */
 export function urlVue( vue, chemin = '' ) {
-	const base = window.cinqCentral?.urls?.[ vue ] ?? '';
+	const base = window.cinqWpCentral?.urls?.[ vue ] ?? '';
 	return chemin ? `${ base }#${ chemin }` : base;
 }

@@ -2,18 +2,18 @@
 /**
  * "CINQ" block on the WordPress dashboard.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Admin
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Admin
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Admin;
+namespace CinqWpCentral\Admin;
 
-use CinqCentral\Access\Gate;
-use CinqCentral\Central\Connection;
-use CinqCentral\Central\Space;
-use CinqCentral\Contracts\Service;
+use CinqWpCentral\Access\Gate;
+use CinqWpCentral\Central\Connection;
+use CinqWpCentral\Central\Space;
+use CinqWpCentral\Contracts\Service;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,7 +45,7 @@ final class DashboardWidget implements Service {
 			return;
 		}
 
-		wp_add_dashboard_widget( 'cinq_central', __( 'CINQ — votre espace', 'cinq-central' ), array( $this, 'render' ) );
+		wp_add_dashboard_widget( 'cinq_wp_central', __( 'CINQ — votre espace', 'cinq-wp-central' ), array( $this, 'render' ) );
 	}
 
 	/**
@@ -57,7 +57,7 @@ final class DashboardWidget implements Service {
 		$home = Space::home( wp_get_current_user() );
 
 		if ( null === $home ) {
-			echo '<p>' . esc_html__( 'Central ne répond pas pour l’instant.', 'cinq-central' ) . '</p>';
+			echo '<p>' . esc_html__( 'Central ne répond pas pour l’instant.', 'cinq-wp-central' ) . '</p>';
 			$this->footer();
 			return;
 		}
@@ -67,7 +67,7 @@ final class DashboardWidget implements Service {
 
 		$waiting = array_slice( (array) ( $home['attendus'] ?? array() ), 0, 3 );
 		if ( ! empty( $waiting ) ) {
-			echo '<h3>' . esc_html__( 'À valider', 'cinq-central' ) . '</h3><ul>';
+			echo '<h3>' . esc_html__( 'À valider', 'cinq-wp-central' ) . '</h3><ul>';
 			foreach ( $waiting as $item ) {
 				printf(
 					'<li><a href="%1$s">%2$s</a> <span class="description">— %3$s</span></li>',
@@ -81,13 +81,13 @@ final class DashboardWidget implements Service {
 
 		$requests = array_slice( (array) ( $home['demandesOuvertes'] ?? array() ), 0, 3 );
 		if ( ! empty( $requests ) ) {
-			echo '<h3>' . esc_html__( 'Vos demandes en cours', 'cinq-central' ) . '</h3><ul>';
+			echo '<h3>' . esc_html__( 'Vos demandes en cours', 'cinq-wp-central' ) . '</h3><ul>';
 			foreach ( $requests as $item ) {
 				printf(
 					'<li><a href="%1$s">%2$s</a> <span class="description">— %3$s</span></li>',
 					esc_url( AppPage::url( 'demandes', '/demandes/' . rawurlencode( (string) ( $item['id'] ?? '' ) ) ) ),
 					esc_html( (string) ( $item['titre'] ?? '' ) ),
-					esc_html( 'en_cours' === ( $item['etat'] ?? '' ) ? __( 'en cours', 'cinq-central' ) : __( 'reçue', 'cinq-central' ) )
+					esc_html( 'en_cours' === ( $item['etat'] ?? '' ) ? __( 'en cours', 'cinq-wp-central' ) : __( 'reçue', 'cinq-wp-central' ) )
 				);
 			}
 			echo '</ul>';
@@ -105,9 +105,9 @@ final class DashboardWidget implements Service {
 		printf(
 			'<p class="community-events-footer"><a href="%1$s" class="button button-primary">%2$s</a> <a href="%3$s" class="button">%4$s</a></p>',
 			esc_url( AppPage::url() ),
-			esc_html__( 'Ouvrir l’espace CINQ', 'cinq-central' ),
+			esc_html__( 'Ouvrir l’espace CINQ', 'cinq-wp-central' ),
 			esc_url( AppPage::url( 'demandes', '/demandes/nouvelle' ) ),
-			esc_html__( 'Nouvelle demande', 'cinq-central' )
+			esc_html__( 'Nouvelle demande', 'cinq-wp-central' )
 		);
 	}
 }

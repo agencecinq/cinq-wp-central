@@ -7,7 +7,7 @@
  */
 import apiFetch from '@wordpress/api-fetch';
 
-const ns = () => window.cinqCentral?.namespace ?? 'cinq-central/v1';
+const ns = () => window.cinqWpCentral?.namespace ?? 'cinq-wp-central/v1';
 
 export function lire( chemin ) {
 	return apiFetch( { path: `/${ ns() }${ chemin }` } );

@@ -14,7 +14,7 @@ import { ecrire } from '../api';
  */
 export function BoutonValiderPorte( { porte, onValidee } ) {
 	const [ ouvert, setOuvert ] = useState( false );
-	const [ nom, setNom ] = useState( window.cinqCentral?.utilisateur ?? '' );
+	const [ nom, setNom ] = useState( window.cinqWpCentral?.utilisateur ?? '' );
 	const [ commentaire, setCommentaire ] = useState( '' );
 	const [ envoi, setEnvoi ] = useState( false );
 	const [ erreur, setErreur ] = useState( null );

@@ -2,13 +2,13 @@
 /**
  * Talking to Central.
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );
 
-use CinqCentral\Central\Client;
-use CinqCentral\Central\Connection;
+use CinqWpCentral\Central\Client;
+use CinqWpCentral\Central\Connection;
 
 $lea = new WP_User( 7, 'lea@boutique.fr', 'Léa Durand', 'lea', array( 'administrator' ) );
 
@@ -25,7 +25,7 @@ check( 'the login stands in for an empty display name', 'xavier' === json_decode
 section( 'Nothing is called before pairing' );
 
 $r = Client::request( 'GET', '/moi', null, $lea );
-check( 'a call without connection is refused locally', is_wp_error( $r ) && 'cinq_central_deconnecte' === $r->get_error_code() );
+check( 'a call without connection is refused locally', is_wp_error( $r ) && 'cinq_wp_central_deconnecte' === $r->get_error_code() );
 check( 'and Central was not called', array() === World::$requests );
 
 section( 'Pairing' );
@@ -59,7 +59,7 @@ check( 'and its status', 422 === ( $r->get_error_data()['status'] ?? 0 ) );
 
 World::answer( array( 401, array( 'erreur' => 'Connexion à Central invalide.' ) ) );
 $r = Client::request( 'GET', '/moi', null, $lea );
-check( 'a revoked secret reads as "disconnected", not as a WordPress login problem', 'cinq_central_deconnecte' === $r->get_error_code() && 409 === $r->get_error_data()['status'] );
+check( 'a revoked secret reads as "disconnected", not as a WordPress login problem', 'cinq_wp_central_deconnecte' === $r->get_error_code() && 409 === $r->get_error_data()['status'] );
 
 World::answer( new WP_Error( 'http_request_failed', 'cURL error 28' ) );
 $r = Client::request( 'GET', '/moi', null, $lea );

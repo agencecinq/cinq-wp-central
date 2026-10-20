@@ -2,17 +2,17 @@
 /**
  * Updates from GitHub releases.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Update
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Update
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Update;
+namespace CinqWpCentral\Update;
 
-use CinqCentral\Contracts\Service;
-use const CinqCentral\PLUGIN_FILE;
-use const CinqCentral\VERSION;
+use CinqWpCentral\Contracts\Service;
+use const CinqWpCentral\PLUGIN_FILE;
+use const CinqWpCentral\VERSION;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,19 +32,19 @@ defined( 'ABSPATH' ) || exit;
  * behind one. The API stays as a fallback for releases without the file.
  *
  * Auto-updates are on: WordPress installs a new release with its own updates,
- * twice a day. The `cinq_central_auto_update` filter turns them off.
+ * twice a day. The `cinq_wp_central_auto_update` filter turns them off.
  */
 final class GitHubUpdater implements Service {
 
 	/**
 	 * Repository, `owner/name`.
 	 */
-	public const REPOSITORY = 'agencecinq/wp-central';
+	public const REPOSITORY = 'agencecinq/cinq-wp-central';
 
 	/**
 	 * Name of the zip attached to each release.
 	 */
-	public const ASSET = 'cinq-central.zip';
+	public const ASSET = 'cinq-wp-central.zip';
 
 	/**
 	 * Name of the release manifest attached to each release.
@@ -54,7 +54,7 @@ final class GitHubUpdater implements Service {
 	/**
 	 * Transient caching the latest release.
 	 */
-	private const TRANSIENT = 'cinq_central_latest_release';
+	private const TRANSIENT = 'cinq_wp_central_latest_release';
 
 	/**
 	 * Registers the hooks.
@@ -87,13 +87,13 @@ final class GitHubUpdater implements Service {
 		 *
 		 * @param bool $enabled Default true.
 		 */
-		return (bool) apply_filters( 'cinq_central_auto_update', true );
+		return (bool) apply_filters( 'cinq_wp_central_auto_update', true );
 	}
 
 	/**
 	 * Unpacks an update into the folder the plugin already lives in.
 	 *
-	 * The zip unpacks into `cinq-central/`. A copy installed under another name
+	 * The zip unpacks into `cinq-wp-central/`. A copy installed under another name
 	 * (a clone, a renamed folder) would otherwise come back under that one, and
 	 * WordPress would deactivate the plugin it can no longer find.
 	 *
@@ -201,7 +201,7 @@ final class GitHubUpdater implements Service {
 			'requires_php'  => $release['requires_php'],
 			'sections'      => array(
 				'changelog' => '' === $release['notes']
-					? sprintf( '<p><a href="%s">%s</a></p>', esc_url( $release['url'] ), esc_html__( 'Notes de version sur GitHub', 'cinq-central' ) )
+					? sprintf( '<p><a href="%s">%s</a></p>', esc_url( $release['url'] ), esc_html__( 'Notes de version sur GitHub', 'cinq-wp-central' ) )
 					: wpautop( esc_html( $release['notes'] ) ),
 			),
 		);
@@ -242,7 +242,7 @@ final class GitHubUpdater implements Service {
 				'timeout' => 10,
 				'headers' => array(
 					'Accept'     => 'application/vnd.github+json, application/json',
-					'User-Agent' => 'cinq-central/' . VERSION,
+					'User-Agent' => 'cinq-wp-central/' . VERSION,
 				),
 			)
 		);
@@ -305,7 +305,7 @@ final class GitHubUpdater implements Service {
 			}
 		}
 
-		// The source archive GitHub builds unpacks into "wp-central-1.2.0/",
+		// The source archive GitHub builds unpacks into "cinq-wp-central-1.2.0/",
 		// which WordPress would install as a second plugin: no asset, no update.
 		if ( '' === $package ) {
 			return null;

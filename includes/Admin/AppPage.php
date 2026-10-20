@@ -2,21 +2,21 @@
 /**
  * The "CINQ" admin menu and the space's screens.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Admin
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Admin
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Admin;
+namespace CinqWpCentral\Admin;
 
-use CinqCentral\Access\Gate;
-use CinqCentral\Central\Connection;
-use CinqCentral\Central\Space;
-use CinqCentral\Contracts\Service;
-use CinqCentral\Rest\Proxy;
-use const CinqCentral\PLUGIN_FILE;
-use const CinqCentral\VERSION;
+use CinqWpCentral\Access\Gate;
+use CinqWpCentral\Central\Connection;
+use CinqWpCentral\Central\Space;
+use CinqWpCentral\Contracts\Service;
+use CinqWpCentral\Rest\Proxy;
+use const CinqWpCentral\PLUGIN_FILE;
+use const CinqWpCentral\VERSION;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +36,7 @@ final class AppPage implements Service {
 	/**
 	 * Slug of the top-level page (Accueil).
 	 */
-	public const SLUG = 'cinq-central';
+	public const SLUG = 'cinq-wp-central';
 
 	/**
 	 * Screens: view => [submenu slug, title].
@@ -45,11 +45,11 @@ final class AppPage implements Service {
 	 */
 	public static function views(): array {
 		return array(
-			'accueil'    => array( self::SLUG, __( 'Accueil', 'cinq-central' ) ),
-			'roadmap'    => array( self::SLUG . '-roadmap', __( 'Roadmap', 'cinq-central' ) ),
-			'demandes'   => array( self::SLUG . '-demandes', __( 'Demandes', 'cinq-central' ) ),
-			'factures'   => array( self::SLUG . '-factures', __( 'Factures', 'cinq-central' ) ),
-			'ressources' => array( self::SLUG . '-ressources', __( 'Ressources', 'cinq-central' ) ),
+			'accueil'    => array( self::SLUG, __( 'Accueil', 'cinq-wp-central' ) ),
+			'roadmap'    => array( self::SLUG . '-roadmap', __( 'Roadmap', 'cinq-wp-central' ) ),
+			'demandes'   => array( self::SLUG . '-demandes', __( 'Demandes', 'cinq-wp-central' ) ),
+			'factures'   => array( self::SLUG . '-factures', __( 'Factures', 'cinq-wp-central' ) ),
+			'ressources' => array( self::SLUG . '-ressources', __( 'Ressources', 'cinq-wp-central' ) ),
 		);
 	}
 
@@ -92,8 +92,8 @@ final class AppPage implements Service {
 			: '';
 
 		add_menu_page(
-			__( 'Espace CINQ', 'cinq-central' ),
-			__( 'CINQ', 'cinq-central' ) . $badge,
+			__( 'Espace CINQ', 'cinq-wp-central' ),
+			__( 'CINQ', 'cinq-wp-central' ) . $badge,
 			'read',
 			self::SLUG,
 			array( $this, 'render' ),
@@ -104,7 +104,7 @@ final class AppPage implements Service {
 		foreach ( self::views() as $view => list( $slug, $title ) ) {
 			add_submenu_page(
 				self::SLUG,
-				$title . ' — ' . __( 'Espace CINQ', 'cinq-central' ),
+				$title . ' — ' . __( 'Espace CINQ', 'cinq-wp-central' ),
 				'accueil' === $view ? $title . $badge : $title,
 				'read',
 				$slug,
@@ -120,29 +120,29 @@ final class AppPage implements Service {
 	 */
 	public function render(): void {
 		if ( ! Gate::can() ) {
-			wp_die( esc_html__( 'Votre compte n’a pas accès à l’espace CINQ.', 'cinq-central' ), 403 );
+			wp_die( esc_html__( 'Votre compte n’a pas accès à l’espace CINQ.', 'cinq-wp-central' ), 403 );
 		}
 
-		echo '<div class="wrap cinq-central">';
+		echo '<div class="wrap cinq-wp-central">';
 
 		if ( ! Connection::is_connected() ) {
-			echo '<h1>' . esc_html__( 'Espace CINQ', 'cinq-central' ) . '</h1>';
+			echo '<h1>' . esc_html__( 'Espace CINQ', 'cinq-wp-central' ) . '</h1>';
 			echo '<div class="notice notice-info inline"><p>';
 			if ( Gate::can_configure() ) {
 				printf(
 					/* translators: %s: settings page link. */
-					esc_html__( 'Ce site n’est pas encore relié à Central. Saisissez le code transmis par CINQ dans %s.', 'cinq-central' ),
-					'<a href="' . esc_url( SettingsPage::url() ) . '">' . esc_html__( 'Réglages › CINQ Central', 'cinq-central' ) . '</a>'
+					esc_html__( 'Ce site n’est pas encore relié à Central. Saisissez le code transmis par CINQ dans %s.', 'cinq-wp-central' ),
+					'<a href="' . esc_url( SettingsPage::url() ) . '">' . esc_html__( 'Réglages › CINQ Central', 'cinq-wp-central' ) . '</a>'
 				);
 			} else {
-				esc_html_e( 'Ce site n’est pas encore relié à Central. Un administrateur doit le relier.', 'cinq-central' );
+				esc_html_e( 'Ce site n’est pas encore relié à Central. Un administrateur doit le relier.', 'cinq-wp-central' );
 			}
 			echo '</p></div></div>';
 			return;
 		}
 
-		echo '<div id="cinq-central-app"><p>' . esc_html__( 'Chargement de votre espace…', 'cinq-central' ) . '</p></div>';
-		echo '<noscript><p>' . esc_html__( 'L’espace CINQ a besoin de JavaScript.', 'cinq-central' ) . '</p></noscript>';
+		echo '<div id="cinq-wp-central-app"><p>' . esc_html__( 'Chargement de votre espace…', 'cinq-wp-central' ) . '</p></div>';
+		echo '<noscript><p>' . esc_html__( 'L’espace CINQ a besoin de JavaScript.', 'cinq-wp-central' ) . '</p></noscript>';
 		echo '</div>';
 	}
 
@@ -170,11 +170,11 @@ final class AppPage implements Service {
 				'version'      => VERSION,
 			);
 
-		wp_enqueue_script( 'cinq-central-app', $url . 'index.js', $asset['dependencies'], $asset['version'], true );
+		wp_enqueue_script( 'cinq-wp-central-app', $url . 'index.js', $asset['dependencies'], $asset['version'], true );
 		wp_enqueue_style( 'wp-components' );
 
 		if ( is_readable( $dir . 'style-index.css' ) ) {
-			wp_enqueue_style( 'cinq-central-app', $url . 'style-index.css', array( 'wp-components' ), $asset['version'] );
+			wp_enqueue_style( 'cinq-wp-central-app', $url . 'style-index.css', array( 'wp-components' ), $asset['version'] );
 		}
 
 		$urls = array();
@@ -183,8 +183,8 @@ final class AppPage implements Service {
 		}
 
 		wp_add_inline_script(
-			'cinq-central-app',
-			'window.cinqCentral = ' . wp_json_encode(
+			'cinq-wp-central-app',
+			'window.cinqWpCentral = ' . wp_json_encode(
 				array(
 					'vue'         => $view,
 					'espace'      => (string) ( Connection::get()['client'] ?? '' ),

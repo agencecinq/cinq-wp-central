@@ -2,12 +2,12 @@
 /**
  * Who opens the space.
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );
 
-use CinqCentral\Access\Gate;
+use CinqWpCentral\Access\Gate;
 
 section( 'Administrators by default, nobody else' );
 
@@ -27,5 +27,5 @@ check( 'an empty choice falls back to administrators', array( 'administrator' ) 
 
 section( 'A filter has the last word' );
 
-add_filter( 'cinq_central_user_can', static fn ( bool $allowed, WP_User $u ) => $allowed && 'bloque@boutique.fr' !== $u->user_email, 10, 2 );
+add_filter( 'cinq_wp_central_user_can', static fn ( bool $allowed, WP_User $u ) => $allowed && 'bloque@boutique.fr' !== $u->user_email, 10, 2 );
 check( 'a filter can refuse an administrator', ! Gate::can( new WP_User( 5, 'bloque@boutique.fr', 'B', 'b', array( 'administrator' ) ) ) );

@@ -6,7 +6,7 @@
  *
  * Usage: php tests/run-tests.php [suite name filter]
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );

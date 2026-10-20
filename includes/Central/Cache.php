@@ -2,13 +2,13 @@
 /**
  * Short-lived cache of Central's answers.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Central
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Central
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Central;
+namespace CinqWpCentral\Central;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,7 +25,7 @@ final class Cache {
 	/**
 	 * Option holding the generation number.
 	 */
-	private const GENERATION = 'cinq_central_cache_gen';
+	private const GENERATION = 'cinq_wp_central_cache_gen';
 
 	/**
 	 * Reads a cached value.
@@ -67,6 +67,6 @@ final class Cache {
 	 * @return string
 	 */
 	private static function key( string $key ): string {
-		return 'cinq_central_' . (int) get_option( self::GENERATION, 0 ) . '_' . md5( $key );
+		return 'cinq_wp_central_' . (int) get_option( self::GENERATION, 0 ) . '_' . md5( $key );
 	}
 }

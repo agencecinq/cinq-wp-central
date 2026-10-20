@@ -2,19 +2,19 @@
 /**
  * The feedback widget on the site's front end.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Front
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Front
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Front;
+namespace CinqWpCentral\Front;
 
-use CinqCentral\Access\Gate;
-use CinqCentral\Admin\AppPage;
-use CinqCentral\Central\Connection;
-use CinqCentral\Central\Space;
-use CinqCentral\Contracts\Service;
+use CinqWpCentral\Access\Gate;
+use CinqWpCentral\Admin\AppPage;
+use CinqWpCentral\Central\Connection;
+use CinqWpCentral\Central\Space;
+use CinqWpCentral\Contracts\Service;
 use WP_Admin_Bar;
 
 defined( 'ABSPATH' ) || exit;
@@ -56,7 +56,7 @@ final class Widget implements Service {
 		 *
 		 * @param bool $show Default true.
 		 */
-		if ( ! apply_filters( 'cinq_central_front_widget', true ) ) {
+		if ( ! apply_filters( 'cinq_wp_central_front_widget', true ) ) {
 			return;
 		}
 
@@ -103,8 +103,8 @@ final class Widget implements Service {
 
 		$bar->add_node(
 			array(
-				'id'    => 'cinq-central-signaler',
-				'title' => '<span class="ab-icon dashicons dashicons-flag" style="margin-top:2px"></span>' . esc_html__( 'Signaler à CINQ', 'cinq-central' ),
+				'id'    => 'cinq-wp-central-signaler',
+				'title' => '<span class="ab-icon dashicons dashicons-flag" style="margin-top:2px"></span>' . esc_html__( 'Signaler à CINQ', 'cinq-wp-central' ),
 				'href'  => AppPage::url( 'demandes', '/demandes/nouvelle?page=' . rawurlencode( $page ) ),
 			)
 		);

@@ -36,7 +36,7 @@ info() {
 log "🚀 Starting production build..."
 
 # Ensure the script runs from the plugin root
-if [ ! -f "cinq-central.php" ] || [ ! -f "package.json" ]; then
+if [ ! -f "cinq-wp-central.php" ] || [ ! -f "package.json" ]; then
     error "This script must be run from the plugin root directory"
 fi
 
@@ -113,4 +113,4 @@ log ""
 info "Files kept for production:"
 log "  - build/ (compiled admin app)"
 log "  - includes/ (plugin PHP code)"
-log "  - cinq-central.php, uninstall.php, README.md, LICENSE"
+log "  - cinq-wp-central.php, uninstall.php, README.md, LICENSE"

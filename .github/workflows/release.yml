@@ -32,10 +32,10 @@ jobs:
       - name: Check the version
         run: |
           tag="${GITHUB_REF_NAME#v}"
-          header="$(sed -n 's/^ \* Version: *//p' cinq-central.php)"
-          constant="$(sed -n "s/^const VERSION *= *'\(.*\)';/\1/p" cinq-central.php)"
+          header="$(sed -n 's/^ \* Version: *//p' cinq-wp-central.php)"
+          constant="$(sed -n "s/^const VERSION *= *'\(.*\)';/\1/p" cinq-wp-central.php)"
           if [ "$tag" != "$header" ] || [ "$tag" != "$constant" ]; then
-            echo "Tag $tag, header $header, constant $constant: bump both in cinq-central.php." >&2
+            echo "Tag $tag, header $header, constant $constant: bump both in cinq-wp-central.php." >&2
             exit 1
           fi
 
@@ -46,8 +46,8 @@ jobs:
       - name: Read the requirements
         id: requires
         run: |
-          echo "wp=$(sed -n 's/^ \* Requires at least: *//p' cinq-central.php)" >> "$GITHUB_OUTPUT"
-          echo "php=$(sed -n 's/^ \* Requires PHP: *//p' cinq-central.php)" >> "$GITHUB_OUTPUT"
+          echo "wp=$(sed -n 's/^ \* Requires at least: *//p' cinq-wp-central.php)" >> "$GITHUB_OUTPUT"
+          echo "php=$(sed -n 's/^ \* Requires PHP: *//p' cinq-wp-central.php)" >> "$GITHUB_OUTPUT"
 
       - name: Build production package
         run: |
@@ -56,20 +56,20 @@ jobs:
           cat "$RUNNER_TEMP/release.log"
 
       # The folder is named after the plugin slug, not the repository:
-      # WordPress replaces wp-content/plugins/cinq-central/ with it.
+      # WordPress replaces wp-content/plugins/cinq-wp-central/ with it.
       - name: Create plugin ZIP
         run: |
           mkdir -p "$RUNNER_TEMP/dist"
-          cp -R . "$RUNNER_TEMP/dist/cinq-central"
-          (cd "$RUNNER_TEMP/dist" && zip -qr "$RUNNER_TEMP/cinq-central.zip" cinq-central)
-          unzip -l "$RUNNER_TEMP/cinq-central.zip" | tail -n 5
+          cp -R . "$RUNNER_TEMP/dist/cinq-wp-central"
+          (cd "$RUNNER_TEMP/dist" && zip -qr "$RUNNER_TEMP/cinq-wp-central.zip" cinq-wp-central)
+          unzip -l "$RUNNER_TEMP/cinq-wp-central.zip" | tail -n 5
 
       - name: Write the update manifest
         run: |
           jq -n \
             --arg version "${GITHUB_REF_NAME#v}" \
             --arg url "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${GITHUB_REF_NAME}" \
-            --arg package "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cinq-central.zip" \
+            --arg package "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/cinq-wp-central.zip" \
             --arg requires "${{ steps.requires.outputs.wp }}" \
             --arg requires_php "${{ steps.requires.outputs.php }}" \
             '{version: $version, url: $url, package: $package, requires: $requires, requires_php: $requires_php}' > "$RUNNER_TEMP/update.json"
@@ -78,6 +78,6 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{ runner.temp }}/cinq-central.zip
+            ${{ runner.temp }}/cinq-wp-central.zip
             ${{ runner.temp }}/update.json
           generate_release_notes: true

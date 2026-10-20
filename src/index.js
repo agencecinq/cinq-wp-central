@@ -18,7 +18,7 @@ const UUID = '([0-9a-fA-F-]{36})';
 
 function App() {
 	const { chemin, params } = useRoute();
-	const vue = window.cinqCentral?.vue ?? 'accueil';
+	const vue = window.cinqWpCentral?.vue ?? 'accueil';
 	let m;
 
 	if ( ( m = chemin.match( new RegExp( `^/projets/${ UUID }$` ) ) ) ) {
@@ -47,7 +47,7 @@ function App() {
 	}
 }
 
-const racine = document.getElementById( 'cinq-central-app' );
+const racine = document.getElementById( 'cinq-wp-central-app' );
 if ( racine ) {
 	createRoot( racine ).render( <App /> );
 }

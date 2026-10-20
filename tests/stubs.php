@@ -2,7 +2,7 @@
 /**
  * Minimal WordPress stubs.
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );
@@ -72,7 +72,7 @@ function wp_parse_url( string $url, int $component = -1 ) { return parse_url( $u
 function wp_generate_password( int $length = 12, bool $special = true ): string { return str_repeat( 'x', $length ); }
 function is_multisite(): bool { return false; }
 function is_super_admin( $id = 0 ): bool { return false; }
-function plugin_basename( string $file ): string { return 'cinq-central/' . basename( $file ); }
+function plugin_basename( string $file ): string { return 'cinq-wp-central/' . basename( $file ); }
 function rest_authorization_required_code(): int { return World::$user ? 403 : 401; }
 
 function add_action( ...$args ): void {}

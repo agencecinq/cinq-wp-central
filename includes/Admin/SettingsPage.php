@@ -2,18 +2,18 @@
 /**
  * Settings › CINQ Central.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Admin
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Admin
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Admin;
+namespace CinqWpCentral\Admin;
 
-use CinqCentral\Access\Gate;
-use CinqCentral\Central\Client;
-use CinqCentral\Central\Connection;
-use CinqCentral\Contracts\Service;
+use CinqWpCentral\Access\Gate;
+use CinqWpCentral\Central\Client;
+use CinqWpCentral\Central\Connection;
+use CinqWpCentral\Contracts\Service;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,7 +29,7 @@ final class SettingsPage implements Service {
 	/**
 	 * Page slug.
 	 */
-	public const SLUG = 'cinq-central-reglages';
+	public const SLUG = 'cinq-wp-central-reglages';
 
 	/**
 	 * Registers the hooks.
@@ -38,10 +38,10 @@ final class SettingsPage implements Service {
 	 */
 	public function run(): void {
 		add_action( 'admin_menu', array( $this, 'menu' ) );
-		add_action( 'admin_post_cinq_central_appairer', array( $this, 'pair' ) );
-		add_action( 'admin_post_cinq_central_roles', array( $this, 'save_roles' ) );
-		add_action( 'admin_post_cinq_central_deconnecter', array( $this, 'disconnect' ) );
-		add_filter( 'plugin_action_links_' . plugin_basename( \CinqCentral\PLUGIN_FILE ), array( $this, 'action_links' ) );
+		add_action( 'admin_post_cinq_wp_central_appairer', array( $this, 'pair' ) );
+		add_action( 'admin_post_cinq_wp_central_roles', array( $this, 'save_roles' ) );
+		add_action( 'admin_post_cinq_wp_central_deconnecter', array( $this, 'disconnect' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( \CinqWpCentral\PLUGIN_FILE ), array( $this, 'action_links' ) );
 	}
 
 	/**
@@ -60,8 +60,8 @@ final class SettingsPage implements Service {
 	 */
 	public function menu(): void {
 		add_options_page(
-			__( 'CINQ Central', 'cinq-central' ),
-			__( 'CINQ Central', 'cinq-central' ),
+			__( 'CINQ Central', 'cinq-wp-central' ),
+			__( 'CINQ Central', 'cinq-wp-central' ),
 			'manage_options',
 			self::SLUG,
 			array( $this, 'render' )
@@ -75,7 +75,7 @@ final class SettingsPage implements Service {
 	 * @return string[]
 	 */
 	public function action_links( array $links ): array {
-		array_unshift( $links, sprintf( '<a href="%s">%s</a>', esc_url( self::url() ), esc_html__( 'Réglages', 'cinq-central' ) ) );
+		array_unshift( $links, sprintf( '<a href="%s">%s</a>', esc_url( self::url() ), esc_html__( 'Réglages', 'cinq-wp-central' ) ) );
 
 		return $links;
 	}
@@ -86,7 +86,7 @@ final class SettingsPage implements Service {
 	 * @return void
 	 */
 	public function pair(): void {
-		$this->guard( 'cinq_central_appairer' );
+		$this->guard( 'cinq_wp_central_appairer' );
 
 		$code   = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked in guard().
 		$answer = Client::pair( $code );
@@ -96,7 +96,7 @@ final class SettingsPage implements Service {
 		}
 
 		/* translators: %s: client name in Central. */
-		$this->back( 'success', sprintf( __( 'Site relié à l’espace de %s.', 'cinq-central' ), (string) ( $answer['client'] ?? '' ) ) );
+		$this->back( 'success', sprintf( __( 'Site relié à l’espace de %s.', 'cinq-wp-central' ), (string) ( $answer['client'] ?? '' ) ) );
 	}
 
 	/**
@@ -105,7 +105,7 @@ final class SettingsPage implements Service {
 	 * @return void
 	 */
 	public function save_roles(): void {
-		$this->guard( 'cinq_central_roles' );
+		$this->guard( 'cinq_wp_central_roles' );
 
 		$known = array_keys( wp_roles()->get_names() );
 		$roles = isset( $_POST['roles'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['roles'] ) ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked in guard().
@@ -117,7 +117,7 @@ final class SettingsPage implements Service {
 		}
 
 		update_option( Gate::OPTION, $roles, true );
-		$this->back( 'success', __( 'Accès enregistrés.', 'cinq-central' ) );
+		$this->back( 'success', __( 'Accès enregistrés.', 'cinq-wp-central' ) );
 	}
 
 	/**
@@ -126,9 +126,9 @@ final class SettingsPage implements Service {
 	 * @return void
 	 */
 	public function disconnect(): void {
-		$this->guard( 'cinq_central_deconnecter' );
+		$this->guard( 'cinq_wp_central_deconnecter' );
 		Client::disconnect();
-		$this->back( 'success', __( 'Site déconnecté de Central.', 'cinq-central' ) );
+		$this->back( 'success', __( 'Site déconnecté de Central.', 'cinq-wp-central' ) );
 	}
 
 	/**
@@ -146,8 +146,8 @@ final class SettingsPage implements Service {
 		delete_transient( $this->notice_key() );
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'CINQ Central', 'cinq-central' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Votre espace client CINQ dans l’administration de ce site : projets, validations, roadmap, demandes et factures.', 'cinq-central' ) . '</p>';
+		echo '<h1>' . esc_html__( 'CINQ Central', 'cinq-wp-central' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Votre espace client CINQ dans l’administration de ce site : projets, validations, roadmap, demandes et factures.', 'cinq-wp-central' ) . '</p>';
 
 		if ( is_array( $notice ) ) {
 			printf(
@@ -172,16 +172,16 @@ final class SettingsPage implements Service {
 	 * @return void
 	 */
 	private function render_pairing(): void {
-		echo '<h2>' . esc_html__( 'Relier ce site à Central', 'cinq-central' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Votre chef de projet CINQ vous transmet un code de connexion (il est valable 24 heures et ne sert qu’une fois).', 'cinq-central' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Relier ce site à Central', 'cinq-wp-central' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Votre chef de projet CINQ vous transmet un code de connexion (il est valable 24 heures et ne sert qu’une fois).', 'cinq-wp-central' ) . '</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
-		wp_nonce_field( 'cinq_central_appairer' );
-		echo '<input type="hidden" name="action" value="cinq_central_appairer" />';
+		wp_nonce_field( 'cinq_wp_central_appairer' );
+		echo '<input type="hidden" name="action" value="cinq_wp_central_appairer" />';
 		echo '<table class="form-table" role="presentation"><tr>';
-		echo '<th scope="row"><label for="cinq-central-code">' . esc_html__( 'Code de connexion', 'cinq-central' ) . '</label></th>';
-		echo '<td><input type="text" id="cinq-central-code" name="code" class="regular-text code" placeholder="CINQ-XXXX-XXXX" autocomplete="off" required /></td>';
+		echo '<th scope="row"><label for="cinq-wp-central-code">' . esc_html__( 'Code de connexion', 'cinq-wp-central' ) . '</label></th>';
+		echo '<td><input type="text" id="cinq-wp-central-code" name="code" class="regular-text code" placeholder="CINQ-XXXX-XXXX" autocomplete="off" required /></td>';
 		echo '</tr></table>';
-		submit_button( __( 'Relier le site', 'cinq-central' ) );
+		submit_button( __( 'Relier le site', 'cinq-wp-central' ) );
 		echo '</form>';
 	}
 
@@ -194,39 +194,39 @@ final class SettingsPage implements Service {
 	private function render_connected( array $connection ): void {
 		$me = Client::request( 'GET', '/moi', null, wp_get_current_user(), 8 );
 
-		echo '<h2>' . esc_html__( 'Connexion', 'cinq-central' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Connexion', 'cinq-wp-central' ) . '</h2>';
 		echo '<table class="form-table" role="presentation">';
-		$this->row( __( 'Espace', 'cinq-central' ), esc_html( (string) $connection['client'] ) );
+		$this->row( __( 'Espace', 'cinq-wp-central' ), esc_html( (string) $connection['client'] ) );
 		$this->row(
-			__( 'Relié le', 'cinq-central' ),
+			__( 'Relié le', 'cinq-wp-central' ),
 			esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $connection['connecte_le'] ) )
 		);
-		$this->row( __( 'Central', 'cinq-central' ), '<code>' . esc_html( Connection::base_url() ) . '</code>' );
+		$this->row( __( 'Central', 'cinq-wp-central' ), '<code>' . esc_html( Connection::base_url() ) . '</code>' );
 
 		if ( is_wp_error( $me ) ) {
 			$this->row(
-				__( 'État', 'cinq-central' ),
+				__( 'État', 'cinq-wp-central' ),
 				'<span style="color:#b32d2e">' . esc_html( $me->get_error_message() ) . '</span>'
 			);
 		} else {
 			$actor = (array) ( $me['acteur'] ?? array() );
 			$label = 'agence' === ( $actor['cote'] ?? '' )
-				? __( 'compte CINQ', 'cinq-central' )
-				: __( 'compte client', 'cinq-central' );
+				? __( 'compte CINQ', 'cinq-wp-central' )
+				: __( 'compte client', 'cinq-wp-central' );
 			$this->row(
-				__( 'État', 'cinq-central' ),
-				'<span style="color:#008a20">' . esc_html__( 'Connecté', 'cinq-central' ) . '</span> — '
+				__( 'État', 'cinq-wp-central' ),
+				'<span style="color:#008a20">' . esc_html__( 'Connecté', 'cinq-wp-central' ) . '</span> — '
 				/* translators: 1: person name, 2: account kind. */
-				. esc_html( sprintf( __( 'vous apparaissez comme %1$s (%2$s)', 'cinq-central' ), (string) ( $actor['nom'] ?? '' ), $label ) )
+				. esc_html( sprintf( __( 'vous apparaissez comme %1$s (%2$s)', 'cinq-wp-central' ), (string) ( $actor['nom'] ?? '' ), $label ) )
 			);
 		}
 		echo '</table>';
 
-		echo '<h2>' . esc_html__( 'Qui voit l’espace CINQ', 'cinq-central' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Les comptes de ces rôles voient le menu CINQ, le bloc du tableau de bord et le bouton de retour sur le site. Chaque personne y apparaît sous son nom ; une adresse @agencecinq.com est reconnue comme l’équipe CINQ.', 'cinq-central' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Qui voit l’espace CINQ', 'cinq-wp-central' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Les comptes de ces rôles voient le menu CINQ, le bloc du tableau de bord et le bouton de retour sur le site. Chaque personne y apparaît sous son nom ; une adresse @agencecinq.com est reconnue comme l’équipe CINQ.', 'cinq-wp-central' ) . '</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
-		wp_nonce_field( 'cinq_central_roles' );
-		echo '<input type="hidden" name="action" value="cinq_central_roles" />';
+		wp_nonce_field( 'cinq_wp_central_roles' );
+		echo '<input type="hidden" name="action" value="cinq_wp_central_roles" />';
 		echo '<fieldset>';
 		$allowed = Gate::roles();
 		foreach ( wp_roles()->get_names() as $slug => $name ) {
@@ -238,15 +238,15 @@ final class SettingsPage implements Service {
 			);
 		}
 		echo '</fieldset>';
-		submit_button( __( 'Enregistrer les accès', 'cinq-central' ), 'secondary' );
+		submit_button( __( 'Enregistrer les accès', 'cinq-wp-central' ), 'secondary' );
 		echo '</form>';
 
-		echo '<h2>' . esc_html__( 'Déconnecter', 'cinq-central' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Le site cesse d’ouvrir l’espace. Rien n’est effacé dans Central ; un nouveau code permet de le relier à nouveau.', 'cinq-central' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Déconnecter', 'cinq-wp-central' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Le site cesse d’ouvrir l’espace. Rien n’est effacé dans Central ; un nouveau code permet de le relier à nouveau.', 'cinq-wp-central' ) . '</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
-		wp_nonce_field( 'cinq_central_deconnecter' );
-		echo '<input type="hidden" name="action" value="cinq_central_deconnecter" />';
-		submit_button( __( 'Déconnecter ce site', 'cinq-central' ), 'delete' );
+		wp_nonce_field( 'cinq_wp_central_deconnecter' );
+		echo '<input type="hidden" name="action" value="cinq_wp_central_deconnecter" />';
+		submit_button( __( 'Déconnecter ce site', 'cinq-wp-central' ), 'delete' );
 		echo '</form>';
 	}
 
@@ -270,7 +270,7 @@ final class SettingsPage implements Service {
 	 */
 	private function guard( string $action ): void {
 		if ( ! Gate::can_configure() ) {
-			wp_die( esc_html__( 'Vous n’avez pas les droits nécessaires.', 'cinq-central' ), 403 );
+			wp_die( esc_html__( 'Vous n’avez pas les droits nécessaires.', 'cinq-wp-central' ), 403 );
 		}
 
 		check_admin_referer( $action );
@@ -302,6 +302,6 @@ final class SettingsPage implements Service {
 	 * @return string
 	 */
 	private function notice_key(): string {
-		return 'cinq_central_notice_' . get_current_user_id();
+		return 'cinq_wp_central_notice_' . get_current_user_id();
 	}
 }

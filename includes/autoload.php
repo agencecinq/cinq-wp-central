@@ -1,16 +1,16 @@
 <?php
 /**
- * PSR-4 style autoloader for the CinqCentral namespace.
+ * PSR-4 style autoloader for the CinqWpCentral namespace.
  *
  * The plugin ships without a Composer vendor directory so it can be zipped and
  * installed like any other WordPress plugin.
  *
- * @package CinqCentral
+ * @package CinqWpCentral
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral;
+namespace CinqWpCentral;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +23,7 @@ spl_autoload_register(
 		}
 
 		$relative = substr( $class_name, strlen( $prefix ) );
-		$path     = CINQ_CENTRAL_PATH . 'includes/' . str_replace( '\\', '/', $relative ) . '.php';
+		$path     = CINQ_WP_CENTRAL_PATH . 'includes/' . str_replace( '\\', '/', $relative ) . '.php';
 
 		if ( is_readable( $path ) ) {
 			require_once $path;

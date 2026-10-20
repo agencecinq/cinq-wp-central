@@ -2,13 +2,13 @@
 /**
  * Service contract.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Contracts
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Contracts
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Contracts;
+namespace CinqWpCentral\Contracts;
 
 defined( 'ABSPATH' ) || exit;
 

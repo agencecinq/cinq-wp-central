@@ -2,13 +2,13 @@
 /**
  * The site's connection to Central.
  *
- * @package CinqCentral
- * @subpackage CinqCentral/Central
+ * @package CinqWpCentral
+ * @subpackage CinqWpCentral/Central
  */
 
 declare( strict_types = 1 );
 
-namespace CinqCentral\Central;
+namespace CinqWpCentral\Central;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,7 +24,7 @@ final class Connection {
 	/**
 	 * Option holding the connection.
 	 */
-	public const OPTION = 'cinq_central_connexion';
+	public const OPTION = 'cinq_wp_central_connexion';
 
 	/**
 	 * Default Central address.
@@ -47,7 +47,7 @@ final class Connection {
 		 *
 		 * @param string $url Base URL, without a trailing slash.
 		 */
-		return untrailingslashit( (string) apply_filters( 'cinq_central_url', $url ) );
+		return untrailingslashit( (string) apply_filters( 'cinq_wp_central_url', $url ) );
 	}
 
 	/**
