@@ -9,7 +9,7 @@ composants de WordPress, sans les couleurs de CINQ : l'espace prend l'allure de 
 
 | Où | Quoi |
 |---|---|
-| Menu **CINQ** (sous Tableau de bord) | Accueil, Roadmap, Demandes, Factures, Ressources. Pastille = validations attendues. |
+| Menu **CINQ** (sous Tableau de bord) | Accueil, Roadmap, Demandes, Factures, Ressources, Surveillance. Pastille = validations attendues. **Surveillance** (disponibilité, échéances du certificat et du nom de domaine, copies de la boutique) n'apparaît que lorsqu'un site du client est surveillé par CINQ ; l'Accueil en garde un résumé. |
 | **Tableau de bord** | Bloc « CINQ — votre espace » : la situation, ce qui attend le client, ses demandes en cours. |
 | **Front du site** | Le widget de retour de Central, chargé en dernier. Le bouton n'apparaît que dans les navigateurs qui ont ouvert le lien d'activation (`?cinq-feedback=…`) : **Réglages › CINQ Central › Afficher le widget**, ou le lien à envoyer à qui doit signaler (même sans accès à l'admin). |
 | **Barre d'admin** (front) | « Signaler à CINQ » : ouvre une nouvelle demande avec la page en cours. |
@@ -54,8 +54,8 @@ navigateur ──(cookie + nonce REST)──▶ /wp-json/cinq-wp-central/v1/*   
 - `includes/Central/Client.php` : appels à Central ; un secret révoqué remonte en
   « site déconnecté », un refus de Central s'affiche tel qu'il est écrit.
 - `includes/Central/Space.php` : ce qui s'affiche sur toutes les pages (pastille, bloc du
-  tableau de bord) est mis en cache 5 minutes par personne, échecs compris ; le widget,
-  une heure pour le site.
+  tableau de bord) est mis en cache 5 minutes par personne, échecs compris ; le widget et
+  la présence de l'entrée « Surveillance » (`/veille`), une heure pour le site.
 - `includes/Front/Widget.php` : le front n'appelle jamais Central. La partie publique du
   widget (script, jeton — jamais la clé) est gardée en option, rafraîchie quand une
   personne autorisée passe dans l'admin.

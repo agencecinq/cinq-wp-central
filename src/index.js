@@ -1,7 +1,8 @@
 /**
  * The CINQ space inside wp-admin.
  *
- * One app, five screens — one per submenu, like the web space's navigation.
+ * One app, six screens — one per submenu: the web space's navigation, plus
+ * the monitoring (a block of the web space's home).
  * Details open through the URL hash inside the screen that loaded them.
  */
 import { createRoot } from '@wordpress/element';
@@ -12,6 +13,7 @@ import { Roadmap } from './vues/roadmap';
 import { Demandes, Demande, NouvelleDemande } from './vues/demandes';
 import { Factures } from './vues/factures';
 import { Ressources } from './vues/ressources';
+import { Veille } from './vues/veille';
 import './style.scss';
 
 const UUID = '([0-9a-fA-F-]{36})';
@@ -42,6 +44,8 @@ function App() {
 			return <Factures />;
 		case 'ressources':
 			return <Ressources />;
+		case 'veille':
+			return <Veille />;
 		default:
 			return <Accueil />;
 	}
