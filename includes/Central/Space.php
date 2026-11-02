@@ -15,8 +15,9 @@ use WP_User;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The few reads that every admin page shows: the menu badge, the dashboard
- * widget, the front-end feedback widget.
+ * The few reads that every admin page shows: the menu badge, the
+ * « Surveillance » menu entry, the dashboard widget, the front-end feedback
+ * widget.
  *
  * Cached five minutes per person, failures included: a Central outage must
  * not slow every admin page down. Calls are short (4 seconds) for the same
@@ -60,6 +61,37 @@ final class Space {
 		}
 
 		return self::cached( 'widget', $user, HOUR_IN_SECONDS, 'widget:site' );
+	}
+
+	/**
+	 * `/veille`: the monitoring of the client's sites.
+	 *
+	 * Read for the menu only, to know whether the « Surveillance » entry has
+	 * anything to show; the screen itself asks Central live. The same for
+	 * every person, and it only changes when CINQ switches a monitoring on:
+	 * cached an hour for the site.
+	 *
+	 * @param WP_User $user User.
+	 * @return array<string, mixed>|null
+	 */
+	public static function veille( WP_User $user ): ?array {
+		return self::cached( 'veille', $user, HOUR_IN_SECONDS, 'veille:site' );
+	}
+
+	/**
+	 * Whether at least one of the client's sites is monitored.
+	 *
+	 * False when Central cannot answer, including a Central that does not
+	 * serve `/veille` yet: an entry that opens on an error is worse than no
+	 * entry at all.
+	 *
+	 * @param WP_User $user User.
+	 * @return bool
+	 */
+	public static function monitored( WP_User $user ): bool {
+		$sites = self::veille( $user )['sites'] ?? null;
+
+		return is_array( $sites ) && ! empty( $sites );
 	}
 
 	/**

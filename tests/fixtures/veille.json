@@ -1,0 +1,28 @@
+{
+  "sites": [
+    {
+      "domaine": "lomi.fr",
+      "disponibilite": {
+        "taux": 0.9996,
+        "surveilleDepuis": "2026-10-01T08:00:00.000Z",
+        "reponseMoyenneMs": 412,
+        "enPanne": false,
+        "incidents": [
+          { "debut": "2026-10-20T13:05:00.000Z", "fin": "2026-10-20T13:17:00.000Z", "dureeMinutes": 12, "cause": "Erreur du serveur" }
+        ]
+      },
+      "echeances": [
+        { "libelle": "Certificat SSL", "expireLe": "2027-01-14", "joursRestants": 73, "ton": "valide" },
+        { "libelle": "Nom de domaine", "expireLe": "2026-11-20", "joursRestants": 18, "ton": "attention" }
+      ],
+      "copies": {
+        "actif": true,
+        "variantesSurveillees": 1240,
+        "dernierScanLe": "2026-11-01T03:12:00.000Z",
+        "suspects": [
+          { "domaine": "lomi-shop.com", "nature": "Copie de votre boutique", "etat": "Signalé aux intermédiaires", "ferme": false, "detecteLe": "2026-10-28T09:40:00.000Z" }
+        ]
+      }
+    }
+  ]
+}
