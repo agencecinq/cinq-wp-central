@@ -69,6 +69,7 @@ final class Proxy implements Service {
 			array( 'POST', "/portes/{$id}/valider", '/portes/{id}/valider' ),
 			array( 'GET', '/factures', '/factures' ),
 			array( 'GET', '/ressources', '/ressources' ),
+			array( 'GET', '/veille', '/veille' ),
 		);
 	}
 

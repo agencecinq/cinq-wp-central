@@ -23,6 +23,8 @@ final class World {
 	public static array $responses = array();
 	/** @var array<int, array<string, mixed>> */
 	public static array $routes = array();
+	/** @var array<string, string> Admin menu entries, slug => title. */
+	public static array $menu = array();
 	public static ?WP_User $user = null;
 	public static string $home = 'https://boutique.fr';
 
@@ -33,6 +35,7 @@ final class World {
 		self::$requests   = array();
 		self::$responses  = array();
 		self::$routes     = array();
+		self::$menu       = array();
 		self::$user       = null;
 	}
 
@@ -98,6 +101,19 @@ function current_user_can( string $cap ): bool {
 
 function register_rest_route( string $ns, string $route, array $args ): void {
 	World::$routes[] = array( 'route' => $route ) + $args;
+}
+
+function add_menu_page( string $page_title, string $menu_title, string $cap, string $slug, $cb = null, string $icon = '', $position = null ): string {
+	World::$menu[ $slug ] = $menu_title;
+	return 'toplevel_page_' . $slug;
+}
+function add_submenu_page( string $parent, string $page_title, string $menu_title, string $cap, string $slug, $cb = null ): string {
+	World::$menu[ $parent . '>' . $slug ] = $menu_title;
+	return $parent . '_page_' . $slug;
+}
+function remove_submenu_page( string $parent, string $slug ) {
+	unset( World::$menu[ $parent . '>' . $slug ] );
+	return array();
 }
 
 function wp_remote_request( string $url, array $args ) {

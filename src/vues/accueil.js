@@ -17,11 +17,13 @@ import {
 	ETAT_CARTE,
 } from '../format';
 import { urlVue } from '../routeur';
+import { ResumeVeille } from './veille';
 
 /**
  * The home screen, in the web space's order — it is not negotiable there and
  * is not here: what waits for the client, what happens this month, their
- * projects, what we owe them, one invoicing figure.
+ * projects, what we owe them, one invoicing figure, then the monitoring of
+ * their sites (its detail has its own screen).
  */
 export function Accueil() {
 	const lecture = useLecture( '/accueil' );
@@ -270,6 +272,8 @@ export function Accueil() {
 							</a>
 						</p>
 					) }
+
+					<ResumeVeille />
 				</>
 			) }
 		</Ecran>

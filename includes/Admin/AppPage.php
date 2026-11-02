@@ -24,6 +24,12 @@ defined( 'ABSPATH' ) || exit;
  * A top-level "CINQ" menu, one submenu per screen of the space, the same
  * entries as the web space: Accueil, Roadmap, Demandes, Factures, Ressources.
  *
+ * Plus « Surveillance », the monitoring of the client's sites, which the web
+ * space shows as a block of its home: here the home keeps a summary and the
+ * detail gets its own screen. The entry only appears once a site is
+ * monitored — Central then answers `/veille` with sites — and the page stays
+ * reachable by its URL either way, so a link from the home never breaks.
+ *
  * Each screen is the same small React app (WordPress's own components, no
  * CINQ colours), told which view to open. Details (a project, a request, a
  * card) open inside the screen, through the URL hash.
@@ -50,6 +56,7 @@ final class AppPage implements Service {
 			'demandes'   => array( self::SLUG . '-demandes', __( 'Demandes', 'cinq-wp-central' ) ),
 			'factures'   => array( self::SLUG . '-factures', __( 'Factures', 'cinq-wp-central' ) ),
 			'ressources' => array( self::SLUG . '-ressources', __( 'Ressources', 'cinq-wp-central' ) ),
+			'veille'     => array( self::SLUG . '-surveillance', __( 'Surveillance', 'cinq-wp-central' ) ),
 		);
 	}
 
@@ -86,7 +93,8 @@ final class AppPage implements Service {
 			return;
 		}
 
-		$waiting = Connection::is_connected() ? Space::waiting( wp_get_current_user() ) : 0;
+		$user    = wp_get_current_user();
+		$waiting = Connection::is_connected() ? Space::waiting( $user ) : 0;
 		$badge   = $waiting > 0
 			? sprintf( ' <span class="awaiting-mod count-%1$d"><span class="pending-count">%1$d</span></span>', $waiting )
 			: '';
@@ -110,6 +118,11 @@ final class AppPage implements Service {
 				$slug,
 				array( $this, 'render' )
 			);
+		}
+
+		// Out of the menu, not unregistered: the page still opens by its URL.
+		if ( ! Space::monitored( $user ) ) {
+			remove_submenu_page( self::SLUG, self::views()['veille'][0] );
 		}
 	}
 
